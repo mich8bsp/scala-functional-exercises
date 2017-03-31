@@ -1,5 +1,7 @@
 import Chapter3.List.sum
 import Chapter3.List.tail
+import Chapter3.List.drop
+import Chapter3.List.dropWhile
 /**
   * Created by mich8 on 31-Mar-17.
   */
@@ -27,12 +29,39 @@ object Chapter3 {
       if (as.isEmpty) Nil
       else Cons(as.head, apply(as.tail: _*))
 
-//    ex 3.2
-    def tail[A](ds: List[A]): List[A] = ds match{
+    //    ex 3.2
+    def tail[A](ds: List[A]): List[A] = ds match {
       case Nil => Nil
       case Cons(x, xs) => xs
     }
 
+    //    ex 3.3
+    def setHead[A](ds: List[A], newHead: A) = {
+      Cons(newHead, tail(ds))
+    }
+
+//    ex 3.4
+    def drop[A](l: List[A], n: Int): List[A] = n match {
+      case 0 => l
+      case _ => drop(tail(l), n - 1)
+    }
+
+//    ex 3.5
+    def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
+      case Nil => Nil
+      case Cons(x, _) => if (f(x)) {
+        dropWhile(tail(l), f)
+      } else {
+        l
+      }
+    }
+
+    // ex 3.6
+    def init[A](l: List[A]): List[A] = l match {
+      case Nil => Nil
+      case Cons(x, Nil) => Nil
+      case Cons(x, xs) => Cons(x, init(xs))
+    }
   }
 
   def main(args: Array[String]): Unit = {
@@ -50,5 +79,8 @@ object Chapter3 {
 
     println(tail(List("a", "b", "c")))
     println(tail(List()))
+    println(drop(List(1,2,3,4,5), 3))
+    val f: Int=> Boolean = a => a < 4
+    println(dropWhile(List(1,2,3,4,5,6), f))
   }
 }
